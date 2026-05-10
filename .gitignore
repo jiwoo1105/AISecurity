@@ -1,0 +1,35 @@
+# Data
+data/chexpert/
+data/nih/
+data/*.pkl
+
+# Model checkpoints
+models/checkpoints/*.pth
+*.pth
+
+# Results
+results/*.csv
+results/*.png
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.eggs/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+venv/
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/

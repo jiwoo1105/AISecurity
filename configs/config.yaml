@@ -1,0 +1,68 @@
+# === 데이터 설정 ===
+data:
+  dataset: "chexpert"
+  data_dir: "data/chexpert"
+  image_size: 224
+  num_workers: 4
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+
+# === 모델 설정 ===
+model:
+  name: "resnet50"            # resnet50 | densenet121
+  num_classes: 2              # Pneumonia vs Normal
+  pretrained: true
+
+# === 학습 설정 ===
+training:
+  batch_size: 32
+  epochs: 20
+  learning_rate: 0.0001
+  weight_decay: 0.00001
+  optimizer: "adam"
+  scheduler: "cosine"         # cosine | step | none
+  early_stopping_patience: 5
+
+# === 공격 설정 ===
+attack:
+  fgsm:
+    epsilons: [0.01, 0.02, 0.04, 0.08]
+  pgd:
+    epsilons: [0.01, 0.02, 0.04, 0.08]
+    steps: [10, 20, 40]
+    step_size: 0.01
+  diffattack:
+    steps: 100
+    guidance_scale: 7.5
+
+# === 방어 설정 ===
+defense:
+  diffpure:
+    noise_level: 0.1
+    denoise_steps: 100
+  medical_diffpure:
+    noise_level_pixel: 0.1
+    noise_level_diffusion: 0.2
+    dice_threshold: 0.95
+    max_retry: 3
+  adversarial_training:
+    epsilon: 0.04
+    pgd_steps: 10
+  randomized_smoothing:
+    sigma: 0.25
+    n_samples: 100
+
+# === 평가 설정 ===
+evaluation:
+  metrics: ["asr", "lpips", "clean_acc", "robust_acc", "auc", "ece", "anatomical_ssim"]
+
+# === 경로 설정 ===
+paths:
+  checkpoint_dir: "models/checkpoints"
+  results_dir: "results"
+  fft_stats_path: "data/fft_statistics.pkl"
+
+# === 기타 ===
+seed: 42
+device: "cuda"
