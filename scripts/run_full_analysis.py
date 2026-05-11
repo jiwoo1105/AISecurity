@@ -153,9 +153,9 @@ def fft_comparison(attack_results, save_dir="results/fft_analysis"):
     fig, axes = plt.subplots(2, 4, figsize=(20, 10))
     import torch.fft as fft_module
 
-    images_to_show = [("Original", attack_results["FGSM"]["result"]["originals"][sample_idx])]
+    images_to_show = [("Original", attack_results["FGSM"]["result"]["originals"][0])]
     for name in ["FGSM", "PGD", "DiffAttack"]:
-        images_to_show.append((name, attack_results[name]["result"]["adversarials"][sample_idx]))
+        images_to_show.append((name, attack_results[name]["result"]["adversarials"][0]))
 
     for i, (title, img) in enumerate(images_to_show):
         # 이미지
