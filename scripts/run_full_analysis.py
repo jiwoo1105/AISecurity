@@ -62,7 +62,7 @@ def run_attacks(model, test_loader, device):
     attacks = {
         "FGSM": FGSM(model, epsilon=eps),
         "PGD": PGD(model, epsilon=eps, step_size=0.01, num_steps=20),
-        "DiffAttack": DiffAttack(model, epsilon=eps, num_steps=30, diffusion_steps=30),
+        "DiffAttack": DiffAttack(model, epsilon=eps, num_steps=30, diffusion_steps=20, device=str(device)),
     }
 
     results = {}
