@@ -21,10 +21,13 @@ class CheXpertDataset(Dataset):
 
         df = pd.read_csv(csv_path)
 
+        # Frontal view만 사용 (Lateral 제외)
+        df = df[df["Frontal/Lateral"] == "Frontal"]
+
         # Pneumonia 컬럼 기준 binary classification
         # 1.0 = Pneumonia(양성), 0.0 = Normal(음성)
         # -1.0 (uncertain) → 1.0으로 처리 (U-Ones 정책)
-        # NaN → 0.0으로 처리
+        # NaN → 제외 (단, No Finding=1이면 Negative)
         df = df[df["Pneumonia"].notna() | (df["No Finding"] == 1.0)]
 
         self.samples = []
