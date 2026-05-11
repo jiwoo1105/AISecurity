@@ -1,0 +1,2 @@
+model,clean_accuracy,auc,ece
+resnet50,0.8282,0.8992,0.0622
