@@ -1,4 +1,4 @@
 attack,no_defense,vanilla_diffpure,randomized_smoothing
-FGSM,0.3820,0.4485,0.6214
-PGD,0.0000,0.4671,0.5809
-DiffAttack,0.7555,0.5672,0.5819
+FGSM,0.2561,0.5339,0.5713
+PGD,0.0000,0.5992,0.5551
+DiffAttack,0.8331,0.7310,0.5592
