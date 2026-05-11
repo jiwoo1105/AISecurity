@@ -47,8 +47,8 @@ class FGSM:
         grad_sign = images.grad.data.sign()
         adv_images = images + self.epsilon * grad_sign
 
-        # [0, 1] 범위로 클리핑
-        adv_images = torch.clamp(adv_images, 0, 1)
+        # 정규화된 이미지 범위로 클리핑 (Normalize(0.5, 0.5) → [-1, 1])
+        adv_images = torch.clamp(adv_images, -1, 1)
 
         return adv_images.detach()
 

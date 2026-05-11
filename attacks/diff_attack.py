@@ -119,10 +119,12 @@ class DiffAttack:
             # VAE 디코딩 (gradient 흐르게)
             denoised_latent_unscaled = denoised_latent / self.vae.config.scaling_factor
             decoded = self.vae.decode(denoised_latent_unscaled).sample
-            adv_images = ((decoded + 1.0) / 2.0).clamp(0, 1)
+            adv_images_01 = ((decoded + 1.0) / 2.0).clamp(0, 1)
+            # 분류기 입력은 [-1,1] 정규화
+            adv_images_norm = adv_images_01 * 2.0 - 1.0
 
             # 분류기 손실
-            outputs = self.model(adv_images)
+            outputs = self.model(adv_images_norm)
             loss = self.criterion(outputs, labels)
 
             # 역전파
@@ -139,9 +141,11 @@ class DiffAttack:
             denoised = self._denoise_step(final_latent, noise, t)
             adv_images = self._decode(denoised)
 
-            # 원본과의 차이를 ε 범위로 제한
+            # 원본과의 차이를 ε 범위로 제한 ([-1,1] 정규화 기준)
+            adv_images = self._decode(denoised)
+            adv_images = adv_images * 2.0 - 1.0  # [0,1] → [-1,1]
             perturbation = torch.clamp(adv_images - images, -self.epsilon, self.epsilon)
-            adv_images = torch.clamp(images + perturbation, 0, 1)
+            adv_images = torch.clamp(images + perturbation, -1, 1)
 
         return adv_images.detach()
 

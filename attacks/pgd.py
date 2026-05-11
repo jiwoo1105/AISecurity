@@ -47,7 +47,7 @@ class PGD:
             adv_images = adv_images + torch.empty_like(adv_images).uniform_(
                 -self.epsilon, self.epsilon
             )
-            adv_images = torch.clamp(adv_images, 0, 1)
+            adv_images = torch.clamp(adv_images, -1, 1)
 
         for _ in range(self.num_steps):
             adv_images.requires_grad_(True)
@@ -68,7 +68,7 @@ class PGD:
             perturbation = torch.clamp(
                 adv_images - images, min=-self.epsilon, max=self.epsilon
             )
-            adv_images = torch.clamp(images + perturbation, 0, 1)
+            adv_images = torch.clamp(images + perturbation, -1, 1)
 
         return adv_images.detach()
 

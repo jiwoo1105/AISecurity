@@ -158,8 +158,9 @@ def fft_comparison(attack_results, save_dir="results/fft_analysis"):
         images_to_show.append((name, attack_results[name]["result"]["adversarials"][0]))
 
     for i, (title, img) in enumerate(images_to_show):
-        # 이미지
-        axes[0, i].imshow(img[0].numpy(), cmap="gray")
+        # 이미지 ([-1,1] → [0,1] 변환)
+        img_display = (img[0].numpy() + 1.0) / 2.0
+        axes[0, i].imshow(img_display.clip(0, 1), cmap="gray")
         axes[0, i].set_title(title, fontsize=14)
         axes[0, i].axis("off")
 

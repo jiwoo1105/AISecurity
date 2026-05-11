@@ -58,8 +58,8 @@ class VanillaDiffPure:
         for step in reversed(range(1, t + 1)):
             x_t = self._denoise_step(x_t, step)
 
-        # Step 3: 클리핑
-        x_purified = torch.clamp(x_t, 0, 1)
+        # Step 3: 클리핑 ([-1, 1] 정규화 기준)
+        x_purified = torch.clamp(x_t, -1, 1)
 
         return x_purified
 
