@@ -88,20 +88,29 @@ def fft_comparison(attack_results, save_dir="results/fft_analysis"):
         normal_stats = torch.load(stats_path, weights_only=False)
         print(f"\n정상 FFT 통계 로드: {stats_path}")
 
-    # 각 공격별 FFT 에너지 계산
+    # 각 공격별 FFT 에너지 계산 (전체 이미지 평균)
     all_energies = {}
-    sample_idx = 0
+    num_samples = min(200, len(attack_results["FGSM"]["result"]["originals"]))
+    print(f"\nFFT 에너지 분석: {num_samples}장 평균")
 
     for attack_name, data in attack_results.items():
-        orig = data["result"]["originals"][sample_idx]
-        adv = data["result"]["adversarials"][sample_idx]
+        orig_energies = {"low": [], "mid": [], "high": []}
+        adv_energies = {"low": [], "mid": [], "high": []}
 
-        orig_bands = analyzer.compute_frequency_bands(orig.unsqueeze(0))
-        adv_bands = analyzer.compute_frequency_bands(adv.unsqueeze(0))
+        for i in range(num_samples):
+            orig = data["result"]["originals"][i]
+            adv = data["result"]["adversarials"][i]
+
+            orig_bands = analyzer.compute_frequency_bands(orig.unsqueeze(0))
+            adv_bands = analyzer.compute_frequency_bands(adv.unsqueeze(0))
+
+            for k in ["low", "mid", "high"]:
+                orig_energies[k].append(orig_bands[k].mean().item())
+                adv_energies[k].append(adv_bands[k].mean().item())
 
         all_energies[attack_name] = {
-            "orig": {k: orig_bands[k].mean().item() for k in ["low", "mid", "high"]},
-            "adv": {k: adv_bands[k].mean().item() for k in ["low", "mid", "high"]},
+            "orig": {k: sum(v)/len(v) for k, v in orig_energies.items()},
+            "adv": {k: sum(v)/len(v) for k, v in adv_energies.items()},
         }
 
     # z-score 계산 (정상 통계가 있을 때)
